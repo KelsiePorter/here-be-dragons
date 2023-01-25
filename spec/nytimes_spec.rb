@@ -15,26 +15,51 @@ class Nytimes
       expect(result).to eq("OK")
     end
 
-    xit 'can get copyright' do 
+    it 'can get copyright' do 
       #Using @hash, define a variable called `result` that returns the copyright
+      result = @hash[:copyright]
 
       expect(result).to eq("Copyright (c) 2018 The New York Times Company. All Rights Reserved.")
     end
 
-    xit 'can get array of stories' do 
+    it 'can get array of stories' do 
       #Using @hash, define a variable called `result` that returns the array of stories
+      result = @hash[:results]
   
       expect(result).to be_an_instance_of(Array)
       expect(result.count).to eq(44)
     end
 
-    xit 'can get all stories with subsection of politics' do 
+    it 'can get all stories with subsection of politics' do 
       #Using @hash, define a variable called `result` that returns all stories with subsection of politics.
-  
+      result = @hash[:results].select do |r|
+        r[:subsection] == "Politics"
+      end
+
       expect(result).to be_an_instance_of(Array)
       expect(result.count).to eq(6)
       expect(result.first[:title]).to eq("Congressional G.O.P. Agenda Quietly Falls Into Place Even as Trump Steals the Spotlight")
       expect(result.last[:title]).to eq("Conspiracy Theories Made Alex Jones Very Rich. They May Bring Him Down.")
+    end
+
+    #extension 
+
+    it 'can get all stories with subsection politics or world' do 
+      result = @hash[:results].select do |r|
+        r[:subsection] == "Politics" || r[:subsection] == "Americas"
+      end
+
+      expect(result.count).to eq(8)
+    end
+
+    it 'can get all stories with a subsection that is not politics' do 
+      result = @hash[:results].select do |r|
+        r[:subsection] != "Politics"
+      end
+
+      expect(result.count).to eq(38)
+      expect(result.first[:title]).to_not eq("Congressional G.O.P. Agenda Quietly Falls Into Place Even as Trump Steals the Spotlight")
+      expect(result.first[:title]).to eq("Trump Administration Discussed Coup Plans With Rebel Venezuelan Officers")
     end
   end 
 
